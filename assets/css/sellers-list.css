@@ -1,0 +1,62 @@
+.image-profile{
+    width: 60px;
+}
+
+.icon-seller {
+    font-size: 1.8em;
+}
+
+.form-important {
+    font-size: .8em;
+    font-weight: 500;
+    color: #17a2b8;
+}
+
+.badge-date-seller {
+    padding: 5px !important;
+    font-size: .92em !important;
+    font-weight: normal !important;
+}
+
+.custom-control-seller {    
+    padding-left: 2.2rem !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.sellers-buttons-action {
+    float: left;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.sellers-button-action {
+    cursor: pointer;
+    margin-left: 10.6px;
+}
+
+.sellers-button-action i {
+    font-size: 2.4em;
+    color: #ba4d4d;
+}
+
+.token-group {
+    display: none;
+}
+
+.code-marker-track {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.product-marker-track {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.status-marker-track {
+    margin-top: 5px;
+    font-weight: bold;
+}

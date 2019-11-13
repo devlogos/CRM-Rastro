@@ -1,0 +1,62 @@
+body {
+    background-color: #eaeaea !important;
+}
+
+form.login {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 0px;
+}
+
+.mb-4.h2-login {
+    font-weight: 700;
+    color: #ba4d4d !important;
+}
+
+.remember-login {
+    position: absolute;
+    margin-top: 12px;
+    margin-right: 62px;
+    display: block;
+    right: 0;
+    color: #404040;
+}
+
+label[for="email"], label[for="password"] {
+    font-weight: bold;
+}
+
+input.input-login {
+    background-color: #ffffff;
+    border-radius: 0px;
+    border: none;
+    border-bottom: solid 1px #404040;
+}
+
+input.input-login:focus {
+    border-color: #ba4d4d;
+}
+
+.button-login:not(:disabled):not(.disabled) {
+    background-color: #ba4d4d !important;
+    font-weight: bold;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+.btn-download {
+    border: solid 3px #232323;
+    background-color: #ffffff !important;
+    color: #232323;
+    font-weight: bold;
+}
+
+.btn-download:hover {
+    border: solid 3px #ba4d4d;
+    color: #ba4d4d;
+    font-weight: bold;
+}
+
+.navbar-toggler.login {
+    display: none;
+}

@@ -1,0 +1,103 @@
+body.body-list {
+    background-color: #f2f2f2;
+}
+
+body.body-funnel {
+    background-color: #404040;
+}
+
+body.body-funnel .container-fluid.main {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+body.body-funnel .container-fluid.main .col-md-3 {
+    width: 320px !important;
+    max-width: 320px !important;
+    flex: auto;
+}
+
+.container-fluid.main.list {
+    background-color: #efefef !important;
+}
+
+.container-fluid.main.login {
+    margin-top: 0px;
+}
+
+.container-fluid.main {
+    padding-top: 25px;
+    padding-bottom: 48px;
+}
+
+.row.main {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #17a2b8; 
+    -webkit-box-shadow: none;
+}
+
+#funnel-content {
+    height: 100vh;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 0px #ffffff inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    outline: none !important;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 9.2px !important;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: #ba4d4d !important;
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+    color: #fff;
+    background-color: #ba4d4d !important;
+}
+
+table.dataTable thead .sorting_asc {
+    background-image: none !important;
+}
+
+.btn {
+    padding: .3rem .75rem !important;
+}
+
+.required {
+    color: #9e3939;
+    font-size: 1.2em !important;
+}
+
+.btn-audio-play {
+    width: 36px !important;
+    cursor: pointer !important;
+}
+
+.modal-header {
+    cursor: move;
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+.cursor-move {
+    cursor: move
+}
