@@ -12,38 +12,41 @@ use App\Database;
 
 class CitiesModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read($stateId) {
+    public static function read($stateId)
+    {
         $name = 'A.name';
         $where = '';
-        
-        $states = explode(',',$stateId);        
+
+        $states = explode(',', $stateId);
 
         if (count($states) == 1) {
             if (!empty($stateId)) {
                 $where = sprintf('WHERE A.state_id = %s', $stateId);
             }
-        }
-        else {
-            for ($i=0; $i < count($states); $i++){
-                if ($i == 0){
+        } else {
+            for ($i = 0; $i < count($states); $i++) {
+                if ($i == 0) {
                     $where .= sprintf('WHERE (A.state_id = %s', $states[$i]);
-                }
-                else{
+                } else {
                     $where .= sprintf(' OR A.state_id = %s', $states[$i]);
                 }
             }
-            
+
             $name = "CONCAT(B.initials,'-',A.name) AS name";
             $where .= ')';
         }
 
-        $sql = sprintf("SELECT A.id,%s FROM cities A INNER JOIN states B ON A.state_id = B.id  %s", $name, $where);                
+        $sql = sprintf(
+            "SELECT A.id,%s FROM cities A INNER JOIN states B ON A.state_id = B.id  %s",
+            $name,
+            $where
+        );
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
 
@@ -54,11 +57,11 @@ class CitiesModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

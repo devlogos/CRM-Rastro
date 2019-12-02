@@ -12,20 +12,24 @@ use App\Database;
 
 class ReasonsModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read($companyId, $id = null) {
+    public static function read($companyId, $id = null)
+    {
         $where = '';
 
         if (!empty($id)) {
             $where = 'AND id = :id';
         }
 
-        $sql = sprintf("SELECT id,name FROM reasons WHERE company_id = :companyid AND active = 1 %s", $where);
+        $sql = sprintf(
+            "SELECT id,name FROM reasons WHERE company_id = :companyid AND active = 1 %s",
+            $where
+        );
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':companyid', $companyId);
@@ -41,11 +45,11 @@ class ReasonsModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

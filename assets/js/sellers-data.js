@@ -33,19 +33,19 @@ function attributesSeller(element) {
                         }
 
                         var drEvent = $('#url_image').dropify(
-                                {
-                                    defaultFile: imageUrl,
-                                    messages: {
-                                        'default': 'Arraste e solte sua imagem aqui',
-                                        'replace': 'Arraste e solte sua imagem para substituir',
-                                        'remove': 'Remover',
-                                        'error': 'Algo errado aconteceu!'
-                                    },
-                                    error: {
-                                        'fileSize': 'Tamanho superior a 5 megabytes!',
-                                        'fileExtension': 'Somente imagem em formato png ou jpg!'
-                                    }
-                                });
+                            {
+                                defaultFile: imageUrl,
+                                messages: {
+                                    'default': 'Arraste e solte sua imagem aqui',
+                                    'replace': 'Arraste e solte sua imagem para substituir',
+                                    'remove': 'Remover',
+                                    'error': 'Algo errado aconteceu!'
+                                },
+                                error: {
+                                    'fileSize': 'Tamanho superior a 5 megabytes!',
+                                    'fileExtension': 'Somente imagem em formato png ou jpg!'
+                                }
+                            });
                         drEvent = drEvent.data('dropify');
                         drEvent.resetPreview();
                         drEvent.clearElement();

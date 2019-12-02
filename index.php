@@ -1,7 +1,7 @@
 <?php
 
 /**
- * web app and mobile routes
+ * web application and mobile routes
  *
  * @author Giovane Pessoa
  */
@@ -10,12 +10,17 @@
 require 'vendor/autoload.php';
 require 'init.php';
 
-$app = new \Slim\App([ "settings" => [
+$app = new \Slim\App([
+    "settings" => [
         "displayErrorDetails" => true
     ]
 ]);
 
-$app->get('/helpers/hash/generate/{password}', function ($request, $response, $args) {
+$app->get('/helpers/hash/generate/{password}', function (
+    $request,
+    $response,
+    $args
+) {
     //$header = $response->withHeader('Content-type', 'text/html');
 
     $password = $request->getAttribute('password');
@@ -23,7 +28,7 @@ $app->get('/helpers/hash/generate/{password}', function ($request, $response, $a
     echo password_hash($password, PASSWORD_ARGON2I);
 });
 
-$app->get('/payload/jwt/auth/{key}', function ($request, $response, $args){
+$app->get('/payload/jwt/auth/{key}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     $key = $request->getAttribute('key');
@@ -35,13 +40,13 @@ $app->get('/payload/jwt/auth/{key}', function ($request, $response, $args){
 
 $app->get('/', function () {
     $LoginController = new \App\Controllers\LoginController();
-    
+
     $LoginController->view();
 });
 
 $app->get('/logout', function () {
     $LoginController = new \App\Controllers\LoginController();
-    
+
     $LoginController->logout();
 });
 
@@ -53,17 +58,17 @@ $app->post('/web/app/login', function ($request, $response, $args) {
     $email = $allPostPutVars['email'];
     $password = $allPostPutVars['password'];
     $saveDataAccess = isset($allPostPutVars['save_data_access']) ? true : false;
-    
+
     if ($saveDataAccess) {
-        setcookie('save_data_access', '1', time() + (86400 * 30), "/");
+        setcookie('save_data_access', '1', time() + 86400 * 30, "/");
 
-        setcookie('data_mail', $email, time() + (86400 * 30), "/");
-        setcookie('data_password', $password, time() + (86400 * 30), "/");
+        setcookie('data_mail', $email, time() + 86400 * 30, "/");
+        setcookie('data_password', $password, time() + 86400 * 30, "/");
     } else {
-        setcookie('save_data_access', '0', time() + (86400 * 30), "/");
+        setcookie('save_data_access', '0', time() + 86400 * 30, "/");
 
-        setcookie('data_mail', '', time() + (86400 * 30), "/");
-        setcookie('data_password', '', time() + (86400 * 30), "/");
+        setcookie('data_mail', '', time() + 86400 * 30, "/");
+        setcookie('data_password', '', time() + 86400 * 30, "/");
     }
 
     $usersController = new \App\Controllers\UsersController();
@@ -94,16 +99,19 @@ $app->post('/web/app/login', function ($request, $response, $args) {
 
             if ($inc == 1) {
                 $strSectors = $strSectors . $item;
-            } else if ($inc !== 1 && $inc == count($sectors)) {
+            } elseif ($inc !== 1 && $inc == count($sectors)) {
                 $strSectors = $strSectors . ' e ' . $item;
-            } else if ($inc !== 1) {
+            } elseif ($inc !== 1) {
                 $strSectors = $strSectors . ', ' . $item;
             } else {
                 $strSectors = $strSectors . $item . ' e ';
             }
         }
 
-        $strSectors = count($sectors) > 1 ? '<span>Setores:</span> ' . $strSectors : '<span>Setor:</span> ' . $strSectors;
+        $strSectors =
+            count($sectors) > 1
+            ? '<span>Setores:</span> ' . $strSectors
+            : '<span>Setor:</span> ' . $strSectors;
 
         session_start();
 
@@ -122,32 +130,46 @@ $app->post('/web/app/login', function ($request, $response, $args) {
         storage('USER_STATUS_ID', $status_id);
         storage('USER_SECTORS_ID', $sectors_id);
         storage('USER_SECTORS_NAME', $strSectors);
-        
-        // check all user permissions and store        
+
+        // check all user permissions and store
         $columns = $usersController->readColumnsUsersPermissions();
 
         foreach ($columns as $column) {
-            $permission = $usersController->readUsersPermissions($userId, $column['COLUMN_NAME']);
-            
+            $permission = $usersController->readUsersPermissions(
+                $userId,
+                $column['COLUMN_NAME']
+            );
+
             $value = $permission[$column['COLUMN_NAME']] ? true : false;
-            
+
             storage($column['COLUMN_NAME'], $value);
-        }        
+        }
 
         echo "<script>window.location = '" . DOMAIN . "/dashboard'</script>";
     }
 });
 
-$app->get('/mobile/app/login/{user}/{password}/{firebasetoken}', function ($request, $response, $args) {
+$app->get('/mobile/app/login/{user}/{password}/{firebasetoken}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     $sellersController = new \App\Controllers\SellersController();
 
     $user = $request->getAttribute('user');
     $password = $request->getAttribute('password');
-    $firebaseToken = $request->getAttribute('firebasetoken') == 'undefined' ? null : $request->getAttribute('firebasetoken');
-    
-    $data = $sellersController->readSellersAuthentication($user, $password, $firebaseToken);
+    $firebaseToken =
+        $request->getAttribute('firebasetoken') == 'undefined'
+        ? null
+        : $request->getAttribute('firebasetoken');
+
+    $data = $sellersController->readSellersAuthentication(
+        $user,
+        $password,
+        $firebaseToken
+    );
 
     return $header->withJson($data);
 });
@@ -162,44 +184,75 @@ $app->get('/products/list', function () {
     $ProductsController->listView();
 });
 
-$app->get('/products/categories/{companyid}/{id}', function ($request, $response, $args){
+$app->get('/products/categories/{companyid}/{id}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $categoryId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $categoryId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $ProductsController = new \App\Controllers\ProductsController();
 
-            $data = $ProductsController->readCategories($companyId, $categoryId);
+            $data = $ProductsController->readCategories(
+                $companyId,
+                $categoryId
+            );
         }
     }
 
     return $header->withJson($data);
 });
 
-$app->get('/products/{companyid}/{categoryid}/{id}', function ($request, $response, $args){
+$app->get('/products/{companyid}/{categoryid}/{id}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
     $categoryId = $request->getAttribute('categoryid');
-    $productId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
-    
+    $productId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
+
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $ProductsController = new \App\Controllers\ProductsController();
@@ -211,19 +264,34 @@ $app->get('/products/{companyid}/{categoryid}/{id}', function ($request, $respon
     return $header->withJson($data);
 });
 
-$app->get('/cities/{companyid}/{stateid}', function ($request, $response, $args) {
+$app->get('/cities/{companyid}/{stateid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $stateId = $request->getAttribute('stateid') == 0 || empty($request->getAttribute('stateid')) ? null : $request->getAttribute('stateid');
+    $stateId =
+        $request->getAttribute('stateid') == 0 ||
+        empty($request->getAttribute('stateid'))
+        ? null
+        : $request->getAttribute('stateid');
 
     $data = null;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $CitiesController = new \App\Controllers\CitiesController();
@@ -235,19 +303,33 @@ $app->get('/cities/{companyid}/{stateid}', function ($request, $response, $args)
     return $header->withJson($data);
 });
 
-$app->get('/districts/cities/{companyid}/{id}', function ($request, $response, $args) {
+$app->get('/districts/cities/{companyid}/{id}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $cityId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $cityId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $DistrictsController = new \App\Controllers\DistrictsController();
@@ -259,7 +341,11 @@ $app->get('/districts/cities/{companyid}/{id}', function ($request, $response, $
     return $header->withJson($data);
 });
 
-$app->get('/districts/{companyid}/{sellerid}', function ($request, $response, $args) {
+$app->get('/districts/{companyid}/{sellerid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
@@ -269,9 +355,16 @@ $app->get('/districts/{companyid}/{sellerid}', function ($request, $response, $a
     $data = null;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $DistrictsController = new \App\Controllers\DistrictsController();
@@ -283,13 +376,21 @@ $app->get('/districts/{companyid}/{sellerid}', function ($request, $response, $a
     return $header->withJson($data);
 });
 
-$app->get('/geolocations/{companyid}/{dates}/{type}/{sellerid}', function ($request, $response, $args) {
+$app->get('/geolocations/{companyid}/{dates}/{type}/{sellerid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $dates = $request->getAttribute('dates') == 0 || empty($request->getAttribute('dates')) ? null : explode(',', $request->getAttribute('dates'));
-    
+    $dates =
+        $request->getAttribute('dates') == 0 ||
+        empty($request->getAttribute('dates'))
+        ? null
+        : explode(',', $request->getAttribute('dates'));
+
     // types
     // 0 -> all
     // 1 -> there was no attendance
@@ -298,19 +399,35 @@ $app->get('/geolocations/{companyid}/{dates}/{type}/{sellerid}', function ($requ
     // 4 -> its scheduled
 
     $type = $request->getAttribute('type');
-    $sellerId = $request->getAttribute('sellerid') == 0 || empty($request->getAttribute('sellerid')) ? null : $request->getAttribute('sellerid');
+    $sellerId =
+        $request->getAttribute('sellerid') == 0 ||
+        empty($request->getAttribute('sellerid'))
+        ? null
+        : $request->getAttribute('sellerid');
 
     $data = null;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $GeolocationsController = new \App\Controllers\GeolocationsController();
 
-            $data = $GeolocationsController->read($companyId, $dates, $type, $sellerId);
+            $data = $GeolocationsController->read(
+                $companyId,
+                $dates,
+                $type,
+                $sellerId
+            );
         }
     }
 
@@ -319,30 +436,39 @@ $app->get('/geolocations/{companyid}/{dates}/{type}/{sellerid}', function ($requ
 
 $app->post('/geolocations/{companyid}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'text/html');
-    
+
     // main attributes
-    $companyId = $request->getAttribute('companyid');  
-       
+    $companyId = $request->getAttribute('companyid');
+
     $data = 0;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $allPostPutVars = $request->getParsedBody();
-            
+
             // get keys
             $creationDate = $allPostPutVars["creation_date"];
-            $userAgent = isset($request->getHeaders()['HTTP_USER_AGENT'][0]) ? $request->getHeaders()['HTTP_USER_AGENT'][0] : null;
+            $userAgent = isset($request->getHeaders()['HTTP_USER_AGENT'][0])
+                ? $request->getHeaders()['HTTP_USER_AGENT'][0]
+                : null;
             $sellerId = $allPostPutVars["seller_id"];
             $saleId = $allPostPutVars["sale_id"];
             $latitude = $allPostPutVars["latitude"];
             $longitude = $allPostPutVars["longitude"];
-            
+
             $GeolocationsController = new \App\Controllers\GeolocationsController();
-            
+
             // define properties
             $GeolocationsController->setCreationDate($creationDate);
             $GeolocationsController->setUserAgent($userAgent);
@@ -350,51 +476,71 @@ $app->post('/geolocations/{companyid}', function ($request, $response, $args) {
             $GeolocationsController->setSaleId($saleId);
             $GeolocationsController->setLatitude($latitude);
             $GeolocationsController->setLongitude($longitude);
-            
+
             $data = $GeolocationsController->create();
         }
     }
-    
+
     return $data;
 });
 
-$app->get('/status/{companyid}/{id}', function ($request, $response, $args){
+$app->get('/status/{companyid}/{id}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $statusId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $statusId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $StatusController = new \App\Controllers\StatusController();
 
-            $data = $StatusController->read($companyId,$statusId);
+            $data = $StatusController->read($companyId, $statusId);
         }
     }
 
     return $header->withJson($data);
 });
 
-$app->get('/reasons/{companyid}/{id}', function ($request, $response, $args){
+$app->get('/reasons/{companyid}/{id}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $reasonsId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $reasonsId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $ReasonsController = new \App\Controllers\ReasonsController();
@@ -407,50 +553,92 @@ $app->get('/reasons/{companyid}/{id}', function ($request, $response, $args){
 });
 
 $app->get('/sales/list', function () {
-    $SalesController = new \App\Controllers\SalesController;
+    $SalesController = new \App\Controllers\SalesController();
     $SalesController->listView();
 });
 
 $app->get('/sales/funnel', function () {
-    $SalesController = new \App\Controllers\SalesController;
+    $SalesController = new \App\Controllers\SalesController();
     $SalesController->funnelView();
 });
 
 $app->get('/sales/trackback', function () {
-    $SalesController = new \App\Controllers\SalesController;
+    $SalesController = new \App\Controllers\SalesController();
     $SalesController->trackbackView();
 });
 
-$app->get('/sales/{companyid}/{sellerid}/{id}/{dates}/{status}/{sectors}/{limit}', function ($request, $response, $args){
-    $header = $response->withHeader('Content-type', 'application/json');
+$app->get(
+    '/sales/{companyid}/{sellerid}/{id}/{dates}/{status}/{sectors}/{limit}',
+    function ($request, $response, $args) {
+        $header = $response->withHeader('Content-type', 'application/json');
 
-    // main attributes
-    $companyId = $request->getAttribute('companyid');
-    $sellerId = $request->getAttribute('sellerid') == 0 || empty($request->getAttribute('sellerid')) ? null : $request->getAttribute('sellerid');
-    $saleId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');    
-    
-    // other attributes
-    $dates = $request->getAttribute('dates') == 0 || empty($request->getAttribute('dates')) ? null : explode(',', $request->getAttribute('dates'));
-    $status = $request->getAttribute('status') == 0 || empty($request->getAttribute('status')) ? null : explode(',', $request->getAttribute('status'));
-    $sectors = $request->getAttribute('sectors') == 0 || empty($request->getAttribute('sectors')) ? null : explode(',', $request->getAttribute('sectors'));   
-    $limit = $request->getAttribute('limit') == 0 || empty($request->getAttribute('limit')) ? null : explode(',', $request->getAttribute('limit'));
+        // main attributes
+        $companyId = $request->getAttribute('companyid');
+        $sellerId =
+            $request->getAttribute('sellerid') == 0 ||
+            empty($request->getAttribute('sellerid'))
+            ? null
+            : $request->getAttribute('sellerid');
+        $saleId =
+            $request->getAttribute('id') == 0 ||
+            empty($request->getAttribute('id'))
+            ? null
+            : $request->getAttribute('id');
 
-    $data = null;
-    
-    // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
-        $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        // other attributes
+        $dates =
+            $request->getAttribute('dates') == 0 ||
+            empty($request->getAttribute('dates'))
+            ? null
+            : explode(',', $request->getAttribute('dates'));
+        $status =
+            $request->getAttribute('status') == 0 ||
+            empty($request->getAttribute('status'))
+            ? null
+            : explode(',', $request->getAttribute('status'));
+        $sectors =
+            $request->getAttribute('sectors') == 0 ||
+            empty($request->getAttribute('sectors'))
+            ? null
+            : explode(',', $request->getAttribute('sectors'));
+        $limit =
+            $request->getAttribute('limit') == 0 ||
+            empty($request->getAttribute('limit'))
+            ? null
+            : explode(',', $request->getAttribute('limit'));
 
-        if ($auth) {
-            $SalesController = new \App\Controllers\SalesController;
-            
-            $data = $SalesController->read($companyId, $sellerId, $saleId, $dates, $status, $sectors, $limit);
+        $data = null;
+
+        // checks authorization from the token
+        if (
+            isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+            isset($request->getHeaders()['HTTP_KEY'][0])
+        ) {
+            $authorize = new \App\Authorize();
+            $auth = $authorize->read(
+                $request->getHeaders()['HTTP_TOKEN'][0],
+                $request->getHeaders()['HTTP_KEY'][0],
+                $companyId
+            );
+
+            if ($auth) {
+                $SalesController = new \App\Controllers\SalesController();
+
+                $data = $SalesController->read(
+                    $companyId,
+                    $sellerId,
+                    $saleId,
+                    $dates,
+                    $status,
+                    $sectors,
+                    $limit
+                );
+            }
         }
-    }
 
-    return $header->withJson($data);
-});
+        return $header->withJson($data);
+    }
+);
 
 $app->post('/sales/create/{companyid}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'text/html');
@@ -459,105 +647,247 @@ $app->post('/sales/create/{companyid}', function ($request, $response, $args) {
 
     $data = 0;
 
-    // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
-        $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+    $headerKeys =
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+        ? true
+        : false;
 
-        if ($auth) {
-            $allPostPutVars = $request->getParsedBody();
+    try {
+        // checks authorization from the token
+        if ($headerKeys) {
+            $authorize = new \App\Authorize();
+            $auth = $authorize->read(
+                $request->getHeaders()['HTTP_TOKEN'][0],
+                $request->getHeaders()['HTTP_KEY'][0],
+                $companyId
+            );
 
-            // get keys for sales
-            $creationDate = $allPostPutVars["creation_date"];
-            $updateDate = $allPostPutVars["update_date"] ? $allPostPutVars["update_date"] : $allPostPutVars["creation_date"];
-            $code = $allPostPutVars["code"];
-            $audioTimeStamp = $allPostPutVars["audio_time_stamp"] ? $allPostPutVars["audio_time_stamp"] : null;
-            $sendAudioFile = $allPostPutVars["send_audio_file"] ? 1 : 0;
-            $sellerId = $allPostPutVars["seller_id"];
-            $productId = $allPostPutVars["product_id"];
-            $districtId = $allPostPutVars["district_id"];
-            $note = $allPostPutVars["note"];
-            $clientIsHolder = $allPostPutVars["client_is_holder"] ? 1 : 0;
-            $reasonId = $allPostPutVars["reason_id"] ? $allPostPutVars["reason_id"] : null;
-            $shippingId = $allPostPutVars["shipping_id"];
+            if ($auth) {
+                $allPostPutVars = $request->getParsedBody();
 
-            // get keys for clients
-            
-            if (isset($allPostPutVars["client_id"])){
-                $clientIdManager = $allPostPutVars["client_id"] ? $allPostPutVars["client_id"] : null;
+                // get keys for sales
+                $creationDate = $allPostPutVars["creation_date"];
+                $updateDate = isset($allPostPutVars["update_date"])
+                    ? $allPostPutVars["update_date"]
+                    : $allPostPutVars["creation_date"];
+                $code = $allPostPutVars["code"];
+                $audioTimeStamp = isset($allPostPutVars["audio_time_stamp"])
+                    ? $allPostPutVars["audio_time_stamp"]
+                    : null;
+                $sendAudioFile = $allPostPutVars["send_audio_file"] ? 1 : 0;
+                $sellerId = $allPostPutVars["seller_id"];
+                $productId = $allPostPutVars["product_id"];
+                $districtId = $allPostPutVars["district_id"];
+                $note = $allPostPutVars["note"];
+                $clientIsHolder = isset($allPostPutVars["client_is_holder"]) ? $allPostPutVars["client_is_holder"] ? 1 : 0 : 0;
+                $reasonId = isset($allPostPutVars["reason_id"])
+                    ? $allPostPutVars["reason_id"]
+                    : null;
+                $shippingId = $allPostPutVars["shipping_id"];
+
+                // get keys for clients
+
+                if (isset($allPostPutVars["client_id"])) {
+                    $clientIdManager = $allPostPutVars["client_id"]
+                        ? $allPostPutVars["client_id"]
+                        : null;
+                } else {
+                    $clientIdManager = null;
+                }
+
+                $clientName = isset($allPostPutVars["client_name"])
+                    ? $allPostPutVars["client_name"]
+                    : null;
+                $clientEmail = isset($allPostPutVars["client_email"])
+                    ? $allPostPutVars["client_email"]
+                    : null;
+                $clientTelephone = isset($allPostPutVars["client_telephone"])
+                    ? $allPostPutVars["client_telephone"]
+                    : null;
+
+                $SalesController = new \App\Controllers\SalesController();
+                $ShipmentsController = new \App\Controllers\ShipmentsController();
+                $ClientsController = new \App\Controllers\ClientsController();
+
+                // define properties for sales
+                $SalesController->setCreationDate($creationDate);
+                $SalesController->setUpdateDate($updateDate);
+                $SalesController->setCode($code);
+                $SalesController->setAudioTimeStamp($audioTimeStamp);
+                $SalesController->setSendAudioFile($sendAudioFile);
+                $SalesController->setSellerId($sellerId);
+                $SalesController->setProductId($productId);
+                $SalesController->setDistrictId($districtId);
+                $SalesController->setNote($note);
+                $SalesController->setClientIsHolder($clientIsHolder);
+
+                $statusId = $ShipmentsController->readStatusId($shippingId);
+                $SalesController->setStatusId($statusId);
+
+                $SalesController->setReasonId($reasonId);
+                $SalesController->setShippingId($shippingId);
+
+                // condition applied to the app
+                if (empty($clientIdManager)) {
+                    // define properties for clients
+                    $ClientsController->setCreationDate($creationDate);
+                    $ClientsController->setUpdateDate($updateDate);
+                    $ClientsController->setCompanyId($companyId);
+                    $ClientsController->setName($clientName);
+                    $ClientsController->setEmail($clientEmail);
+                    $ClientsController->setTelephone($clientTelephone);
+
+                    $clientId = $ClientsController->create();
+
+                    if ($clientId != 0) {
+                        $SalesController->setClientId($clientId);
+
+                        $dataSale = $SalesController->create();
+
+                        if ($dataSale == 0) {
+                            $ClientsController->delete($clientId);
+
+                            $data = 0;
+                        } else {
+                            $data = $dataSale;
+                        }
+                    } else {
+                        $data = 0;
+                    }
+                } else {
+                    // condition applied to crm
+                    $clientId = $clientIdManager;
+
+                    $SalesController->setClientId($clientId);
+
+                    if ($SalesController->create() != 0) {
+                        exit(alert(1, 'Venda agendada com sucesso!', false));
+                    }
+                    else {
+                        echo '<script>clearFieldsNewSale()</script>';
+
+                        exit(alert(3, 'Venda existente com vendedor, produto e cliente informados!', false));
+                    }
+                }
+            } else {
+                $data = -1;
             }
-            else{
-                $clientIdManager = null;
-            }
-            
-            $clientName = $allPostPutVars["client_name"];
-            $clientEmail = $allPostPutVars["client_email"];
-            $clientTelephone = $allPostPutVars["client_telephone"];
+        } else {
+            $data = 0;
+        }
 
-            $SalesController = new \App\Controllers\SalesController();
-            $ShipmentsController = new \App\Controllers\ShipmentsController;
-            $ClientsController = new \App\Controllers\ClientsController();
+        echo $data;
+    } catch (Exception $ex) {
+        echo 0;
+    }
+});
 
-            // define properties for sales
-            $SalesController->setCreationDate($creationDate);
-            $SalesController->setUpdateDate($updateDate);
-            $SalesController->setCode($code);
-            $SalesController->setAudioTimeStamp($audioTimeStamp);
-            $SalesController->setSendAudioFile($sendAudioFile);
-            $SalesController->setSellerId($sellerId);
-            $SalesController->setProductId($productId);
-            $SalesController->setDistrictId($districtId);
-            $SalesController->setNote($note);
-            $SalesController->setClientIsHolder($clientIsHolder);
+$app->post('/sales/update/{companyid}/{id}', function ($request, $response, $args) {
+    $header = $response->withHeader('Content-type', 'text/html');
 
-            $statusId = $ShipmentsController->readStatusId($shippingId);
-            $SalesController->setStatusId($statusId);
+    $companyId = $request->getAttribute('companyid');
+    $saleId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
-            $SalesController->setReasonId($reasonId);
-            $SalesController->setShippingId($shippingId);
+    $data = 0;
 
-            if (empty($clientIdManager)) {
-                // define properties for clients
-                $ClientsController->setCreationDate($creationDate);
+    $headerKeys =
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+        ? true
+        : false;
+
+    try {
+        // checks authorization from the token
+        if ($headerKeys) {
+            $authorize = new \App\Authorize();
+            $auth = $authorize->read(
+                $request->getHeaders()['HTTP_TOKEN'][0],
+                $request->getHeaders()['HTTP_KEY'][0],
+                $companyId
+            );
+
+            if ($auth) {
+                $allPostPutVars = $request->getParsedBody();
+
+                // get keys for sales
+                $updateDate = $allPostPutVars["update_date"];
+                $code = $allPostPutVars["code"];
+                $audioTimeStamp = isset($allPostPutVars["audio_time_stamp"])
+                    ? $allPostPutVars["audio_time_stamp"]
+                    : null;
+                $sendAudioFile = $allPostPutVars["send_audio_file"] ? 1 : 0;
+                $note = $allPostPutVars["note"];
+                $clientIsHolder = $allPostPutVars["client_is_holder"] ? 1 : 0;
+                $reasonId = isset($allPostPutVars["reason_id"])
+                    ? $allPostPutVars["reason_id"]
+                    : null;
+                $shippingId = $allPostPutVars["shipping_id"];
+
+                // get keys for clients
+
+                $clientId = $allPostPutVars["client_id"];
+                $clientName = isset($allPostPutVars["client_name"])
+                    ? $allPostPutVars["client_name"]
+                    : null;
+                $clientEmail = isset($allPostPutVars["client_email"])
+                    ? $allPostPutVars["client_email"]
+                    : null;
+                $clientTelephone = isset($allPostPutVars["client_telephone"])
+                    ? $allPostPutVars["client_telephone"]
+                    : null;
+
+                $SalesController = new \App\Controllers\SalesController();
+                $ShipmentsController = new \App\Controllers\ShipmentsController();
+                $ClientsController = new \App\Controllers\ClientsController();
+
+                // define properties for sales   
+                
+                $SalesController->setUpdateDate($updateDate);
+                $SalesController->setCode($code);
+                $SalesController->setAudioTimeStamp($audioTimeStamp);
+                $SalesController->setSendAudioFile($sendAudioFile);
+                $SalesController->setNote($note);
+                $SalesController->setClientIsHolder($clientIsHolder);
+
+                $statusId = $ShipmentsController->readStatusId($shippingId);
+                $SalesController->setStatusId($statusId);
+
+                $SalesController->setReasonId($reasonId);
+                $SalesController->setShippingId($shippingId);
+                $SalesController->setSaleId($saleId);
+
+                // update client
+
                 $ClientsController->setUpdateDate($updateDate);
                 $ClientsController->setCompanyId($companyId);
                 $ClientsController->setName($clientName);
                 $ClientsController->setEmail($clientEmail);
                 $ClientsController->setTelephone($clientTelephone);
-
-                $clientId = $ClientsController->create();
-            } else {
-                $clientId = $clientIdManager;
-            }
-
-            if ($clientId != 0) {
                 $SalesController->setClientId($clientId);
-
-                $dataSale = $SalesController->create();
-
-                if ($dataSale == 0) {
-                    $ClientsController->delete($clientId);
-                    
-                    $data = 0;
-                }
-                else{
-                    $data = $dataSale;
-                }
-            }
-            else{
-                $data = 0;
+                
+                $data = $SalesController->update();
+            } else {
+                $data = -1;
             }
         } else {
-            $data = -1;
+            $data = 0;
         }
-    } else {
-        $data = 0;
-    }
 
-    echo $data;
+        echo $data;
+    } catch (Exception $ex) {
+        echo 0;
+    }
 });
 
-$app->post('/sales/status/update/{companyid}', function ($request, $response, $args) {
+$app->post('/sales/status/update/{companyid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'text/html');
 
     $companyId = $request->getAttribute('companyid');
@@ -565,9 +895,16 @@ $app->post('/sales/status/update/{companyid}', function ($request, $response, $a
     $data = 0;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $allPostPutVars = $request->getParsedBody();
@@ -589,7 +926,11 @@ $app->post('/sales/status/update/{companyid}', function ($request, $response, $a
     echo $data;
 });
 
-$app->post('/sales/sector/update/{companyid}', function ($request, $response, $args) {
+$app->post('/sales/sector/update/{companyid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'text/html');
 
     $companyId = $request->getAttribute('companyid');
@@ -597,9 +938,16 @@ $app->post('/sales/sector/update/{companyid}', function ($request, $response, $a
     $data = 0;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $allPostPutVars = $request->getParsedBody();
@@ -621,32 +969,49 @@ $app->post('/sales/sector/update/{companyid}', function ($request, $response, $a
     echo $data;
 });
 
-$app->post('/sales/images/convert/{companyid}', function ($request, $response, $args) {
+$app->post('/sales/images/convert/{companyid}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'text/html');
 
     $companyId = $request->getAttribute('companyid');
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $allPostPutVars = $request->getParsedBody();
-            
+
             // get key
-            $paths = substr($allPostPutVars["paths"], 1, strlen($allPostPutVars["paths"]) - 2);
-            
+            $paths = substr(
+                $allPostPutVars["paths"],
+                1,
+                strlen($allPostPutVars["paths"]) - 2
+            );
+
             $arrayPaths = explode(',', $paths);
-            
+
             $SalesController = new \App\Controllers\SalesController();
-            
-            $data = $SalesController->convertImages($arrayPaths,$allPostPutVars['timestamp']);
-            
-            if ($data !== 1){
+
+            $data = $SalesController->convertImages(
+                $arrayPaths,
+                $allPostPutVars['timestamp']
+            );
+
+            if ($data !== 1) {
                 echo alert(3, 'Conversão não realizada!');
-            }
-            else{
+            } else {
                 echo alert(1, 'Conversão realizada!');
             }
         }
@@ -658,19 +1023,29 @@ $app->get('/sellers/list', function () {
     $SalesController->view();
 });
 
-$app->get('/sellers/{companyid}/{id}', function ($request, $response, $args){
+$app->get('/sellers/{companyid}/{id}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $sellerId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $sellerId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $SellerController = new \App\Controllers\SellersController();
@@ -682,19 +1057,33 @@ $app->get('/sellers/{companyid}/{id}', function ($request, $response, $args){
     return $header->withJson($data);
 });
 
-$app->get('/seller/goals/{companyid}/{id}', function ($request, $response, $args){
+$app->get('/sellers/goals/{companyid}/{id}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'application/json');
 
     // main attributes
     $companyId = $request->getAttribute('companyid');
-    $sellerId = $request->getAttribute('id') == 0 || empty($request->getAttribute('id')) ? null : $request->getAttribute('id');
+    $sellerId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
 
     $data = null;
-    
+
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {        
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             $SellerController = new \App\Controllers\SellersController();
@@ -706,54 +1095,66 @@ $app->get('/seller/goals/{companyid}/{id}', function ($request, $response, $args
     return $header->withJson($data);
 });
 
-$app->post('/seller/create', function ($request, $response, $args) {
+$app->post('/sellers/create', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'text/html');
-    
+
     $allPostPutVars = $request->getParsedBody();
-    
+
     $companyId = $allPostPutVars['companyid'];
-        
+
     $data = 0;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             // get keys for sales
             $creationDate = date('Y-m-d h:m');
-            $updateDate = $creationDate;            
+            $updateDate = $creationDate;
             $name = $allPostPutVars['name'];
             $email = $allPostPutVars['email'];
             $telephone = $allPostPutVars['telephone'];
             $user = $allPostPutVars['user'];
-            $password = $allPostPutVars['password'];            
+            $password = $allPostPutVars['password'];
             $cityId = $allPostPutVars['city_id'];
             $recordingTime = $allPostPutVars['recording_time'];
             $sampleRate = $allPostPutVars['sample_rate'];
             $bitsPerSample = $allPostPutVars['bits_per_sample'];
             $sendAfterSale = isset($allPostPutVars['send_after_sale']) ? 1 : 0;
-                        
+
             extract($allPostPutVars);
-            
+
             $SellerController = new \App\Controllers\SellersController();
-                        
+
             // define property for image profile
             $SellerController->setImageProfile(null);
 
             if (isset($_FILES['url_image'])) {
                 $fileInfo = new SplFileInfo($_FILES['url_image']['name']);
-                
-                $fileName = $companyId.date('Ymdhms');
-                $extension = $fileInfo->getExtension();                
-                $newFileName = $fileName.'.'.$extension;
-                
-                if (move_uploaded_file($_FILES['url_image']['tmp_name'], 'media/images/sellers/' . $newFileName)) {
+
+                $fileName = $companyId . date('Ymdhms');
+                $extension = $fileInfo->getExtension();
+                $newFileName = $fileName . '.' . $extension;
+
+                if (
+                    move_uploaded_file(
+                        $_FILES['url_image']['tmp_name'],
+                        'media/images/sellers/' . $newFileName
+                    )
+                ) {
                     $SellerController->setImageProfile($newFileName);
                 }
             }
-            
+
             // define properties for sales
             $SellerController->setCreationDate($creationDate);
             $SellerController->setUpdateDate($updateDate);
@@ -768,18 +1169,8 @@ $app->post('/seller/create', function ($request, $response, $args) {
             $SellerController->setSampleRate($sampleRate);
             $SellerController->setBitsPerSample($bitsPerSample);
             $SellerController->setSendAfterSale($sendAfterSale);
-                                
-            $data = $SellerController->create();
-            
-            if ($data === -3){
-                unlink('media/images/sellers/' . $SellerController->getImageProfile());
-                
-                echo alert(3, 'Não foi possível inserir novo vendedor!');
-            }
-            else{
-                echo alert(1, 'Vendedor inserido com sucesso!');
-                echo '<script>readSellersList();</script>';
-            }
+
+            return $SellerController->create();
         } else {
             echo alert(4, 'Erro ao autenticar!');
         }
@@ -788,7 +1179,11 @@ $app->post('/seller/create', function ($request, $response, $args) {
     }
 });
 
-$app->post('/seller/update/{companyid}/{id}', function ($request, $response, $args) {
+$app->post('/sellers/update/{companyid}/{id}', function (
+    $request,
+    $response,
+    $args
+) {
     $header = $response->withHeader('Content-type', 'text/html');
 
     // main attributes
@@ -798,10 +1193,17 @@ $app->post('/seller/update/{companyid}/{id}', function ($request, $response, $ar
     $data = 0;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);        
-       
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
+
         if ($auth) {
             $allPostPutVars = $request->getParsedBody();
 
@@ -809,7 +1211,10 @@ $app->post('/seller/update/{companyid}/{id}', function ($request, $response, $ar
             //$name = $allPostPutVars["name"];
             //$email = $allPostPutVars["email"];
             //$telephone = $allPostPutVars["telephone"];
-            $password = password_hash($allPostPutVars["password"], PASSWORD_ARGON2I);
+            $password = password_hash(
+                $allPostPutVars["password"],
+                PASSWORD_ARGON2I
+            );
 
             $SellerController = new \App\Controllers\SellersController();
 
@@ -831,51 +1236,67 @@ $app->post('/seller/update/{companyid}/{id}', function ($request, $response, $ar
     echo $data;
 });
 
-$app->post('/seller/notification', function ($request, $response, $args) {
+$app->post('/sellers/notification', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'text/html');
-    
+
     $allPostPutVars = $request->getParsedBody();
-    
+
     $companyId = $allPostPutVars['companyid'];
-        
+
     $data = 0;
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
-        $auth = $authorize->read($request->getHeaders()['HTTP_TOKEN'][0], $request->getHeaders()['HTTP_KEY'][0], $companyId);
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
 
         if ($auth) {
             // get keys for sales
             $title = $allPostPutVars['title'];
             $message = $allPostPutVars['message'];
-            $firebaseToken = isset($allPostPutVars['firebase_token']) ? $allPostPutVars['firebase_token'] : null;
-            
-            if (empty($firebaseToken)){
+            $firebaseToken = isset($allPostPutVars['firebase_token'])
+                ? $allPostPutVars['firebase_token']
+                : null;
+
+            if (empty($firebaseToken)) {
                 exit(alert(3, 'Usuário sem autenticação no app!'));
             }
-            
+
             $SellerController = new \App\Controllers\SellersController();
-            
+
             $success = array();
-            
-            foreach ($firebaseToken as $item){
-                $send = $SellerController->createNotification($title, $message, $item);
-                
-                if ($send){
+
+            foreach ($firebaseToken as $item) {
+                $send = $SellerController->createNotification(
+                    $title,
+                    $message,
+                    $item
+                );
+
+                if ($send) {
                     array_push($success, $send);
                 }
             }
-            
+
             $countSuccess = count($success);
-            
+
             if ($countSuccess == 0) {
                 echo alert(4, 'Algo errado aconteceu!');
             } else {
                 if ($countSuccess == 1) {
                     echo alert(1, 'Enviado com sucesso!');
                 } else {
-                    echo alert(1, sprintf('%s enviados com sucesso!', $countSuccess));
+                    echo alert(
+                        1,
+                        sprintf('%s enviados com sucesso!', $countSuccess)
+                    );
                 }
             }
         } else {
@@ -886,7 +1307,70 @@ $app->post('/seller/notification', function ($request, $response, $args) {
     }
 });
 
-$app->post('/files/send/{companyid}/{filetype}/{saleid}', function ($request, $response, $args) {
+$app->get('/clients/{companyid}/{id}', function ($request, $response, $args) {
+    $header = $response->withHeader('Content-type', 'application/json');
+
+    $companyId = $request->getAttribute('companyid');
+    $clientId =
+        $request->getAttribute('id') == 0 || empty($request->getAttribute('id'))
+        ? null
+        : $request->getAttribute('id');
+
+    $data = null;
+
+    // checks authorization from the token
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
+        $authorize = new \App\Authorize();
+        $auth = $authorize->read(
+            $request->getHeaders()['HTTP_TOKEN'][0],
+            $request->getHeaders()['HTTP_KEY'][0],
+            $companyId
+        );
+
+        if ($auth) {
+            $ClientsController = new \App\Controllers\ClientsController();
+
+            $data = $ClientsController->read($companyId, $clientId);
+        }
+    }
+
+    return $header->withJson($data);
+});
+
+$app->post('/clients/create', function ($request, $response, $args) {
+    $header = $response->withHeader('Content-type', 'text/html');
+
+    $allPostPutVars = $request->getParsedBody();
+
+    $creationDate = date('Y-m-d h:m');
+    $updateDate = $creationDate;
+    $companyId = $allPostPutVars['companyid'];
+    $name = $allPostPutVars['name'];
+    $email = $allPostPutVars['email'];
+    $telephone = $allPostPutVars['telephone'];
+
+    $ClientsController = new \App\Controllers\ClientsController();
+
+    // define properties for clients
+    $ClientsController->setCreationDate($creationDate);
+    $ClientsController->setUpdateDate($updateDate);
+    $ClientsController->setCompanyId($companyId);
+
+    $ClientsController->setName($name);
+    $ClientsController->setEmail($email);
+    $ClientsController->setTelephone($telephone);
+
+    return $ClientsController->createClientFromCRM();
+});
+
+$app->post('/files/send/{companyid}/{filetype}/{saleid}', function (
+    $request,
+    $response,
+    $args
+) {
     //$header = $response->withHeader('Content-type', 'text/html');
 
     // main attributes
@@ -895,7 +1379,10 @@ $app->post('/files/send/{companyid}/{filetype}/{saleid}', function ($request, $r
     $saleId = $request->getAttribute('saleid');
 
     // checks authorization from the token
-    if (isset($request->getHeaders()['HTTP_TOKEN'][0]) && isset($request->getHeaders()['HTTP_KEY'][0])) {
+    if (
+        isset($request->getHeaders()['HTTP_TOKEN'][0]) &&
+        isset($request->getHeaders()['HTTP_KEY'][0])
+    ) {
         $authorize = new \App\Authorize();
 
         $token = $request->getHeaders()['HTTP_TOKEN'][0];
@@ -919,42 +1406,50 @@ $app->post('/files/send/{companyid}/{filetype}/{saleid}', function ($request, $r
                 extract($post);
 
                 if (isset($_FILES['file'])) {
-                    $fileName = $_FILES['file']['name'];                    
-                    
-                    if ($fileType === 'audio'){
+                    $fileName = $_FILES['file']['name'];
+
+                    if ($fileType === 'audio') {
                         $directory = 'sales';
                         $extension = '.flac';
-                    }
-                    else if ($fileType === 'images'){
+                    } elseif ($fileType === 'images') {
                         $directory = 'documents';
                         $extension = '.jpg';
                     }
 
-                    if (move_uploaded_file($_FILES['file']['tmp_name'], 'media/' . $fileType . "/{$directory}/" . $fileName . $extension)) {                        
-                        $SalesController = new \App\Controllers\SalesController; 
-                       
+                    if (
+                        move_uploaded_file(
+                            $_FILES['file']['tmp_name'],
+                            'media/' .
+                                $fileType .
+                                "/{$directory}/" .
+                                $fileName .
+                                $extension
+                        )
+                    ) {
+                        $SalesController = new \App\Controllers\SalesController();
+
                         $result = 0;
 
                         if ($fileType === 'audio') {
                             $SalesController->setSaleId($saleId);
-                            
+
                             $result = $SalesController->updateAudioFile();
-                        } else if ($fileType === 'images') {
+                        } elseif ($fileType === 'images') {
                             $SalesController->setSaleId($saleId);
-                            $SalesController->setCreationDate(date('Y-m-d H:m:s'));
+                            $SalesController->setCreationDate(
+                                date('Y-m-d H:m:s')
+                            );
                             $SalesController->setImageTimeStamp($fileName);
-                            
+
                             $result = $SalesController->createImageFile();
                         }
 
-                        if ($result == 1){
+                        if ($result == 1) {
                             $data = 'sent';
-                        }
-                        else{
+                        } else {
                             $data = 'notsent';
-                        }                        
-                    }
-                    else{
+                        }
+                    } else {
                         $data = 'notsent';
                     }
                 } else {
@@ -973,7 +1468,7 @@ $app->post('/files/send/{companyid}/{filetype}/{saleid}', function ($request, $r
 
 $app->post('/mail/send/{args}', function ($request, $response, $args) {
     $header = $response->withHeader('Content-type', 'text/html');
-    
+
     exit('...');
 
     try {

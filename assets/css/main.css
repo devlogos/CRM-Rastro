@@ -42,7 +42,7 @@ body.body-funnel .container-fluid.main .col-md-3 {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #17a2b8; 
+    background: #17a2b8;
     -webkit-box-shadow: none;
 }
 
@@ -51,15 +51,16 @@ body.body-funnel .container-fluid.main .col-md-3 {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 0px #ffffff inset !important;
     transition: background-color 5000s ease-in-out 0s;
     outline: none !important;
 }
 
-table.dataTable thead th, table.dataTable thead td {
+table.dataTable thead th,
+table.dataTable thead td {
     padding: 10px 9.2px !important;
 }
 
@@ -77,7 +78,7 @@ table.dataTable thead .sorting_asc {
 }
 
 .btn {
-    padding: .3rem .75rem !important;
+    padding: 0.3rem 0.75rem !important;
 }
 
 .required {
@@ -99,5 +100,5 @@ table.dataTable thead .sorting_asc {
 }
 
 .cursor-move {
-    cursor: move
+    cursor: move;
 }

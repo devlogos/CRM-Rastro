@@ -12,11 +12,12 @@ use App\Database;
 
 class StatesModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read($id = null) {
+    public static function read($id = null)
+    {
         $where = '';
 
         if (!empty($id)) {
@@ -25,7 +26,7 @@ class StatesModel
 
         $sql = sprintf("SELECT id,name,initials FROM states %s", $where);
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
 
@@ -40,11 +41,11 @@ class StatesModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

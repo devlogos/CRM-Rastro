@@ -12,15 +12,16 @@ use App\Database;
 
 class DistrictsModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read() {
-        
+    public static function read()
+    {
     }
-    
-    public static function readCities($stateId) {
+
+    public static function readCities($stateId)
+    {
         $where = '';
 
         if (!empty($stateId)) {
@@ -29,7 +30,7 @@ class DistrictsModel
 
         $sql = sprintf("SELECT id,name FROM cities %s", $where);
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
 
@@ -43,8 +44,9 @@ class DistrictsModel
 
         return $result;
     }
-    
-    public static function readDisctricts($cityId) {
+
+    public static function readDisctricts($cityId)
+    {
         $where = '';
 
         if (!empty($cityId)) {
@@ -53,7 +55,7 @@ class DistrictsModel
 
         $sql = sprintf("SELECT id,name FROM districts %s", $where);
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
 
@@ -68,10 +70,12 @@ class DistrictsModel
         return $result;
     }
 
-    public static function readDistrictsForSeller($sellerId) {
-        $sql = 'SELECT D.id, D.name FROM sellers_cities A LEFT JOIN sellers B ON A.seller_id = B.id LEFT JOIN cities C ON A.city_id = C.Id INNER JOIN districts D ON C.id = D.city_id WHERE B.id = :sellerid AND A.active = 1';
+    public static function readDistrictsForSeller($sellerId)
+    {
+        $sql =
+            'SELECT D.id, D.name FROM sellers_cities A LEFT JOIN sellers B ON A.seller_id = B.id LEFT JOIN cities C ON A.city_id = C.Id INNER JOIN districts D ON C.id = D.city_id WHERE B.id = :sellerid AND A.active = 1';
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':sellerid', $sellerId, \PDO::PARAM_INT);
@@ -83,11 +87,11 @@ class DistrictsModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

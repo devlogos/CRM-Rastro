@@ -56,23 +56,6 @@ function getFirstName($name) {
     return $firstName;
 }
 
-/*
-  function getAuthenticationData($parameter) {
-  if ($parameter == 'authentication') {
-  $auth = array();
-
-  session_start();
-
-  $auth['companyId'] = $_SESSION['USER_COMPANY_ID'];
-  $auth['secretKey'] = $_SESSION['SECRETKEY'];
-  $auth['token'] = $_SESSION['TOKEN'];
-  $auth['statusMainId'] = $_SESSION['STATUS_MAIN_ID'];
-
-  echo json_encode($auth);
-  }
-  }
- */
-
 function dateInterval($period = '-1M', $format = 'Y-m-d') {
     $date = new DateTime();
 

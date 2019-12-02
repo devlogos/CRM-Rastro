@@ -12,23 +12,26 @@ use App\Database;
 
 class CompaniesModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read($id = null) {
+    public static function read($id = null)
+    {
         $where = '';
 
         if (!empty($id)) {
             $where = 'AND id = :id';
-        }
-        else{
+        } else {
             $where = 'AND id = 0';
         }
 
-        $sql = sprintf("SELECT id,name,secretkey FROM companies WHERE active = 1 %s", $where);
+        $sql = sprintf(
+            "SELECT id,name,secretkey FROM companies WHERE active = 1 %s",
+            $where
+        );
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
 
@@ -43,11 +46,11 @@ class CompaniesModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

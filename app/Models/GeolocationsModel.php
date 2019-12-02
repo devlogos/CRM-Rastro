@@ -11,12 +11,20 @@ namespace App\Models;
 use App\Database;
 
 class GeolocationsModel
-{    
-    public static function create($creation_date, $user_agent, $seller_id, $sale_id, $latitude, $longitude) {
+{
+    public static function create(
+        $creation_date,
+        $user_agent,
+        $seller_id,
+        $sale_id,
+        $latitude,
+        $longitude
+    ) {
         try {
-            $sql = 'INSERT INTO geolocations (creation_date,user_agent,seller_id,sale_id,latitude,longitude) VALUES (:creation_date,:user_agent,:seller_id,:sale_id,:latitude,:longitude)';
+            $sql =
+                'INSERT INTO geolocations (creation_date,user_agent,seller_id,sale_id,latitude,longitude) VALUES (:creation_date,:user_agent,:seller_id,:sale_id,:latitude,:longitude)';
 
-            $database = new database;
+            $database = new database();
 
             $stmt = $database->prepare($sql);
 
@@ -35,7 +43,8 @@ class GeolocationsModel
         }
     }
 
-    public static function read($companyId, $dates, $type, $sellerId = null) {
+    public static function read($companyId, $dates, $type, $sellerId = null)
+    {
         $where = '';
 
         if (!empty($dates)) {
@@ -46,9 +55,11 @@ class GeolocationsModel
                 foreach ($dates as $date) {
                     if (!empty($date)) {
                         if ($inc == 0) {
-                            $dates[$inc] = 'AND (A.creation_date >= ' . "'{$date}'";
+                            $dates[$inc] =
+                                'AND (A.creation_date >= ' . "'{$date}'";
                         } else {
-                            $dates[$inc] = ' AND A.creation_date <= ' . "'{$date}'";
+                            $dates[$inc] =
+                                ' AND A.creation_date <= ' . "'{$date}'";
                         }
                         $inc++;
                     }
@@ -63,7 +74,11 @@ class GeolocationsModel
             $initialDate = dateInterval('-1M');
             $finalDate = dateInterval('1M');
 
-            $dates = sprintf("AND (A.creation_date >= '%s' AND A.creation_date <= '%s') ", $initialDate, $finalDate);
+            $dates = sprintf(
+                "AND (A.creation_date >= '%s' AND A.creation_date <= '%s') ",
+                $initialDate,
+                $finalDate
+            );
         }
 
         if (!empty($sellerId)) {
@@ -71,18 +86,38 @@ class GeolocationsModel
         }
 
         if ($type == 0) {
-            $sql = sprintf("SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,IFNULL((SELECT BB.color FROM sales AA INNER JOIN status BB ON AA.status_id = BB.id WHERE A.sale_id = AA.id),'#233747') AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id WHERE B.company_id = :companyid %s %s", $dates, $where);
-        } else if ($type == 1) {
-            $sql = sprintf("SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,'#233747' AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id WHERE B.company_id = :companyid AND IFNULL(A.sale_id,0) = 0 %s %s", $dates, $where);
-        } else if ($type == 2) {
-            $sql = sprintf("SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_finished = 1 %s %s", $dates, $where);
-        } else if ($type == 3) {
-            $sql = sprintf("SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_cancelled = 1 %s %s", $dates, $where);
-        } else if ($type == 4) {
-            $sql = sprintf("SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_scheduled = 1 %s %s", $dates, $where);
+            $sql = sprintf(
+                "SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,IFNULL((SELECT BB.color FROM sales AA INNER JOIN status BB ON AA.status_id = BB.id WHERE A.sale_id = AA.id),'#233747') AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id WHERE B.company_id = :companyid %s %s",
+                $dates,
+                $where
+            );
+        } elseif ($type == 1) {
+            $sql = sprintf(
+                "SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,'#233747' AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id WHERE B.company_id = :companyid AND IFNULL(A.sale_id,0) = 0 %s %s",
+                $dates,
+                $where
+            );
+        } elseif ($type == 2) {
+            $sql = sprintf(
+                "SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_finished = 1 %s %s",
+                $dates,
+                $where
+            );
+        } elseif ($type == 3) {
+            $sql = sprintf(
+                "SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_cancelled = 1 %s %s",
+                $dates,
+                $where
+            );
+        } elseif ($type == 4) {
+            $sql = sprintf(
+                "SELECT DISTINCT A.creation_date,A.user_agent,(SELECT GROUP_CONCAT(XX.code,',',XX.audio_time_stamp,',',XX.send_audio_file,',',XY.name,',',XXY.name,',',XXXY.name,',',YY.name) FROM sales XX INNER JOIN products XY ON XX.product_id = XY.id INNER JOIN sellers XXY ON XX.seller_id = XXY.id INNER JOIN clients XXXY ON XX.client_id = XXXY.id INNER JOIN status YY ON XX.status_id = YY.id WHERE XX.id = A.sale_id) AS sale,A.latitude,A.longitude,D.color AS status_color FROM geolocations A LEFT JOIN sellers B ON A.seller_id = B.id INNER JOIN sales C ON C.id = A.sale_id LEFT JOIN status D ON C.status_id = D.id WHERE B.company_id = :companyid AND D.its_scheduled = 1 %s %s",
+                $dates,
+                $where
+            );
         }
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':companyid', $companyId);
@@ -98,11 +133,11 @@ class GeolocationsModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

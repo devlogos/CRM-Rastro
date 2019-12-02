@@ -19,40 +19,81 @@ class ClientsController
     private $email;
     private $telephone;
 
-    function setCreationDate($creationDate) {
+    public function setCreationDate($creationDate)
+    {
         $this->creationDate = $creationDate;
     }
 
-    function setUpdateDate($updateDate) {
+    public function setUpdateDate($updateDate)
+    {
         $this->updateDate = $updateDate;
     }
 
-    function setCompanyId($companyId) {
+    public function setCompanyId($companyId)
+    {
         $this->companyId = $companyId;
     }
 
-    function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
-    function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
 
-    function setTelephone($telephone) {
+    public function setTelephone($telephone)
+    {
         $this->telephone = $telephone;
     }
 
-    public function view() {
+    public function view()
+    {
         \App\View::make('Clients/View');
     }
 
-    public function create() {
+    public function create()
+    {
         // crud task for insertion into the database
-        return ClientsModel::create($this->creationDate, $this->updateDate, $this->companyId, $this->name, $this->email, $this->telephone);
+        return ClientsModel::create(
+            $this->creationDate,
+            $this->updateDate,
+            $this->companyId,
+            $this->name,
+            $this->email,
+            $this->telephone
+        );
     }
 
-    public function read($companyId, $id) {
+    public function createClientFromCRM()
+    {
+        // crud task for insertion into the database
+        $result = ClientsModel::createClientFromCRM(
+            $this->creationDate,
+            $this->updateDate,
+            $this->companyId,
+            $this->name,
+            $this->email,
+            $this->telephone
+        );
+
+        if ($result == 0) {
+            echo alert(4, 'Algo errado aconteceu! Tente novamente mais tarde.');
+        } elseif ($result == 1) {
+            echo alert(
+                3,
+                'Existe um cliente cadastrado com o e-mail informado!'
+            );
+        } else {
+            echo '<script>clearFieldsNewClient();</script>';
+            echo alert(1, 'Cliente adicionado com sucesso!');
+        }
+    }
+
+    public function read($companyId, $id)
+    {
         // crud task for selection in the database
         $clients = ClientsModel::read($companyId, $id);
 
@@ -75,11 +116,12 @@ class ClientsController
         }
     }
 
-    public function update() {
-        
+    public function update()
+    {
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         // crud task for removal in the database
         ClientsModel::delete($id);
     }

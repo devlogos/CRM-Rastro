@@ -23,78 +23,95 @@ class SellersController
     private $email;
     private $telephone;
     private $user;
-    private $password;    
+    private $password;
     private $cityId;
     private $recordingTime;
     private $sampleRate;
     private $bitsPerSample;
-    private $sendAfterSale;    
-    
-    function setSellerId($sellerId){
+    private $sendAfterSale;
+
+    public function setSellerId($sellerId)
+    {
         $this->sellerId = $sellerId;
     }
-    
-    function setCreationDate($creationDate) {
+
+    public function setCreationDate($creationDate)
+    {
         $this->creationDate = $creationDate;
     }
 
-    function setUpdateDate($updateDate) {
+    public function setUpdateDate($updateDate)
+    {
         $this->updateDate = $updateDate;
     }
-    
-    function setCompanyId($companyId){
+
+    public function setCompanyId($companyId)
+    {
         $this->companyId = $companyId;
     }
-    
-    function setName($name){
+
+    public function setName($name)
+    {
         $this->name = $name;
     }
-    
-    function setImageProfile($imageProfile){
+
+    public function setImageProfile($imageProfile)
+    {
         $this->imageProfile = $imageProfile;
     }
-    
-    function getImageProfile(){
+
+    public function getImageProfile()
+    {
         return $this->imageProfile;
     }
-    
-    function setEmail($email){
+
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
-    
-    function setTelephone($telephone){
+
+    public function setTelephone($telephone)
+    {
         $this->telephone = $telephone;
     }
-    
-    function setUser($user){
+
+    public function setUser($user)
+    {
         $this->user = $user;
     }
-    
-    function setPassword($password){
+
+    public function setPassword($password)
+    {
         $this->password = $password;
     }
-    
-    function setCityId($cityId){
+
+    public function setCityId($cityId)
+    {
         $this->cityId = $cityId;
     }
-    
-    function setRecordingTime($recordingTime){
+
+    public function setRecordingTime($recordingTime)
+    {
         $this->recordingTime = $recordingTime;
     }
-    
-    function setSampleRate($sampleRate){
+
+    public function setSampleRate($sampleRate)
+    {
         $this->sampleRate = $sampleRate;
     }
-    
-    function setBitsPerSample($bitsPerSample){
+
+    public function setBitsPerSample($bitsPerSample)
+    {
         $this->bitsPerSample = $bitsPerSample;
     }
-    
-    function setSendAfterSale($sendAfterSale){
+
+    public function setSendAfterSale($sendAfterSale)
+    {
         $this->sendAfterSale = $sendAfterSale;
     }
 
-    public function view() {
+    public function view()
+    {
         session_start();
 
         if (!isset($_SESSION['USER_COMPANY_ID'])) {
@@ -102,18 +119,19 @@ class SellersController
 
             exit;
         }
-        
+
         $states = StatesModel::read();
-        
+
         \App\View::make('Sellers/List', ['states' => $states]);
     }
 
-    public function create() {
+    public function create()
+    {
         $chr = "/@|&|\?|!|\./";
         preg_match_all($chr, $this->password, $resultValpass);
 
         if (count($resultValpass[0]) === 0) {
-            exit(alert(3, 'Utilize em sua senha, elementos como (<strong>@, &, ?, !</strong> ou <strong>.</strong>)!'));
+            echo alert(3, 'Utilize em sua senha, elementos como (<strong>@, &, ?, !</strong> ou <strong>.</strong>)!');
         } else {
             // crud task for insertion into the database
             $result = SellersModel::create($this->creationDate, $this->updateDate, $this->companyId, $this->name, $this->imageProfile, $this->email, $this->telephone, $this->user, $this->password, $this->cityId, $this->recordingTime, $this->sampleRate, $this->bitsPerSample, $this->sendAfterSale);
@@ -123,25 +141,31 @@ class SellersController
             } else if ($result == -2) {
                 exit(alert(3, 'Usuário existente!'));
             } else {
-                return $result;
+                if ($result === -3) {
+                    unlink(
+                        'media/images/sellers/' . getImageProfile()
+                    );
+
+                    echo alert(3, 'Não foi possível inserir novo vendedor!');
+                } else {
+                    echo alert(1, 'Vendedor inserido com sucesso!');
+                }
             }
         }
     }
-    
-    public function createNotification($title, $message, $firebaseToken) {
+
+    public function createNotification($title, $message, $firebaseToken)
+    {
         try {
-            $data = array
-                (
+            $data = array(
                 'to' => $firebaseToken,
-                'notification' => array
-                    (
+                'notification' => array(
                     'title' => $title,
                     'body' => $message
                 )
             );
 
-            $headers = array
-                (
+            $headers = array(
                 'Authorization: key=' . API_ACCESS_KEY,
                 'Content-Type: application/json'
             );
@@ -165,7 +189,8 @@ class SellersController
         }
     }
 
-    public function read($companyId, $id) {
+    public function read($companyId, $id)
+    {
         // crud task for selection in the database
         $sellers = SellersModel::read($companyId, $id);
 
@@ -222,14 +247,15 @@ class SellersController
         }
     }
 
-    public function readSellersAuthentication($user, $password, $firebaseToken) {
+    public function readSellersAuthentication($user, $password, $firebaseToken)
+    {
         // crud task for selection in the database
         $sellers = SellersModel::readSellersAuthentication($user);
 
-        if (!empty($sellers)) {     
+        if (!empty($sellers)) {
             $id = $sellers[0]['id'];
             $companyId = $sellers[0]['companyid'];
-            $secretKey = $sellers[0]['secretkey'];            
+            $secretKey = $sellers[0]['secretkey'];
             $urlImage = DOMAIN_UNSAFE . '/media/images/sellers/' . $sellers[0]['url_image'];
             $name = $sellers[0]['name'];
             $email = $sellers[0]['email'];
@@ -237,7 +263,7 @@ class SellersController
             $user = $sellers[0]['user'];
             $keyword = $sellers[0]['password'];
             $recordingTime = $sellers[0]['recording_time'];
-            $stopSilence = $sellers[0]['stop_on_silence'] ? 'true' : 'false';            
+            $stopSilence = $sellers[0]['stop_on_silence'] ? 'true' : 'false';
             $sampleRate = $sellers[0]['sample_rate'];
             $channelCount = $sellers[0]['channel_count'];
             $bitsPerSample = $sellers[0]['bits_per_sample'];
@@ -245,9 +271,9 @@ class SellersController
             $hash = $sellers[0]['hash'];
             if (password_verify($password, $hash)) {
                 $resultToken = SellersModel::updateFirebaseToken($firebaseToken, $id);
-                
+
                 $resultToken = $resultToken ? true : false;
-                                
+
                 $json = array(
                     'id' => "{$id}",
                     'company_id' => "{$companyId}",
@@ -271,15 +297,16 @@ class SellersController
             }
         }
     }
-    
-    public function readSellersGoals($id) {
+
+    public function readSellersGoals($id)
+    {
         // crud task for selection in the database        
         $sellers = SellersModel::readSellersGoals($id);
 
         $sales_amount = $sellers[0];
         $total_sales_made = $sellers[1];
-        $challenge = $sellers[2];        
-        $percentGoal = $sellers[3];        
+        $challenge = $sellers[2];
+        $percentGoal = $sellers[3];
         $iconGoal = $sellers[4] ? DOMAIN_UNSAFE . '/media/images/goals/' . $sellers[4] : null;
         $messageGoal = $sellers[5];
 
@@ -295,17 +322,16 @@ class SellersController
         return $json;
     }
 
-    public function update() {
-        
-    }
-    
-    public function updateSeller() {
+    public function update()
+    { }
+
+    public function updateSeller()
+    {
         // crud task for updating in the database
         /*return SellersModel::updateSeller($this->name, $this->email, $this->telephone, $this->password, $this->sellerId);*/
         return SellersModel::updateSeller($this->password, $this->sellerId);
     }
 
-    public function delete() {
-        
-    }
+    public function delete()
+    { }
 }

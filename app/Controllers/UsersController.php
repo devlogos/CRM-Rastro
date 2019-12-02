@@ -13,19 +13,21 @@ use App\Authorize;
 
 class UsersController
 {
-    public function view() {
+    public function view()
+    {
         \App\View::make('Users/View');
     }
 
-    public function create() {
-        
+    public function create()
+    {
     }
 
-    public function read() {
-        
+    public function read()
+    {
     }
 
-    public function readUsersAuthentication($email, $password) {
+    public function readUsersAuthentication($email, $password)
+    {
         // crud task for selection in the database
         $users = UsersModel::readUsersAuthentication($email);
 
@@ -51,27 +53,28 @@ class UsersController
             } else {
                 return null;
             }
-        }
-        else{
+        } else {
             return null;
-        }       
+        }
     }
-    
-    public function readUsersPermissions($id, $column) {
+
+    public function readUsersPermissions($id, $column)
+    {
         // crud task for selection in the database
         return UsersModel::readUsersPermissions($id, $column)[0];
     }
-    
-    public function readColumnsUsersPermissions() {
+
+    public function readColumnsUsersPermissions()
+    {
         // crud task for selection in the database
         return UsersModel::readColumnsUsersPermissions();
     }
 
-    public function update() {
-        
+    public function update()
+    {
     }
 
-    public function delete() {
-        
+    public function delete()
+    {
     }
 }

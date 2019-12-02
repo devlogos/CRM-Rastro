@@ -22,7 +22,8 @@ form.login {
     color: #404040;
 }
 
-label[for="email"], label[for="password"] {
+label[for="email"],
+label[for="password"] {
     font-weight: bold;
 }
 

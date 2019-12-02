@@ -1,14 +1,16 @@
 table {
-    font-size: .92em;
+    font-size: 0.92em;
     background-color: #ffffff !important;
 }
 
-table.dataTable tbody th, table.dataTable tbody td {
+table.dataTable tbody th,
+table.dataTable tbody td {
     padding: 8px;
     vertical-align: middle;
 }
 
-table.dataTable thead th, table.dataTable thead td {
+table.dataTable thead th,
+table.dataTable thead td {
     padding: 8px;
     border-bottom: 1px solid #111;
 }
@@ -19,19 +21,19 @@ table.dataTable thead th, table.dataTable thead td {
 
 .dataTables_length select {
     padding: 6px;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     border: solid 1px #e2e2e2;
 }
 
 .dataTables_status select {
     padding: 5px;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     border: solid 1px #e2e2e2;
 }
 
 .dataTables_filter input {
     padding: 5px;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     border: solid 1px #e2e2e2;
 }
 
@@ -39,14 +41,14 @@ table.dataTable thead th, table.dataTable thead td {
     width: 100%;
 }
 
-.sectors-name .badge {    
+.sectors-name .badge {
     float: left;
     margin-top: 11.6px;
     font-size: 1rem;
     font-weight: normal;
 }
 
-.sectors-name span {    
+.sectors-name span {
     font-weight: bold;
 }
 
@@ -65,7 +67,7 @@ table.dataTable thead th, table.dataTable thead td {
     background-color: #dfe1e6;
     font-size: 1.05rem !important;
     border-bottom: none !important;
-    padding: 8px;    
+    padding: 8px;
 }
 
 .col-md-3.col-funnel .card-header .status-circle {
@@ -111,7 +113,7 @@ table.dataTable thead th, table.dataTable thead td {
 }
 
 .col-md-3.col-funnel .card-body .card .title-time {
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: #404040 !important;
     margin-top: 10px;
@@ -129,7 +131,7 @@ table.dataTable thead th, table.dataTable thead td {
 
 .badge-date-sale {
     padding: 5px !important;
-    font-size: .92em !important;
+    font-size: 0.92em !important;
     font-weight: normal !important;
 }
 
@@ -148,24 +150,24 @@ table.dataTable thead th, table.dataTable thead td {
 
 select.status_name {
     position: absolute;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     margin-top: -2.8px;
     margin-left: 10px;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
     visibility: hidden;
-    font-size: .92em;
+    font-size: 0.92em;
     padding: 2.8px;
     outline: none;
 }
 
 select.owner_name {
     position: absolute;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     margin-top: -2.8px;
     margin-left: 10px;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
     visibility: hidden;
-    font-size: .92em;
+    font-size: 0.92em;
     padding: 2.8px;
     outline: none;
 }
@@ -177,7 +179,7 @@ select.owner_name {
     font-weight: 600;
     color: #17a2b8;
     position: absolute;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .icon-note.owner_edit {
@@ -187,11 +189,12 @@ select.owner_name {
     font-weight: 600;
     color: #17a2b8;
     position: absolute;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 audio {
     outline: none;
+    max-width: 276px;
 }
 
 .no-wrap {
@@ -218,7 +221,8 @@ audio {
     max-width: 620px;
 }
 
-.alert-info, .alert-warning {
+.alert-info,
+.alert-warning {
     display: table !important;
 }
 
@@ -246,7 +250,7 @@ audio {
     margin: 2px 0;
 }
 
-.modal-footer>:not(:last-child) {
+.modal-footer > :not(:last-child) {
     margin-right: 0px;
 }
 
@@ -267,8 +271,8 @@ i.no-access {
     select.owner_name {
         max-width: 115px;
     }
-
-    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
         float: left !important;
     }
 }
@@ -277,8 +281,8 @@ i.no-access {
     select.owner_name {
         max-width: 150px;
     }
-
-    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
         float: none !important;
     }
 }
@@ -316,7 +320,7 @@ fieldset {
     padding: 10px;
     background-color: #f5f5f5;
     margin-bottom: 10px;
-    border-radius: .3rem;
+    border-radius: 0.3rem;
 }
 
 .check_doc {
@@ -343,7 +347,43 @@ fieldset {
     padding-left: 0px !important;
 }
 
-.filter-sales{
+.filter-sales {
     background-color: #ba4d4d;
     border-color: #ba4d4d;
+}
+
+.new-client {
+    cursor: pointer;
+    font-size: 2em;
+    margin-top: 4px;
+    color: #ba4d4d;
+}
+
+.modal-dialog-over {
+    padding: 40px;
+}
+
+.modal-content-over {
+    margin-left: -10px;
+}
+
+.clients-content {
+    width: 100% !important;
+}
+
+.flex-row-reverse .select2 {
+    margin-right: 10px;
+}
+
+a > i.icon-download {
+    position: absolute;
+    margin-left: 10px;
+    font-size: 2.8rem;
+    margin-top: 5px;
+    cursor: pointer;
+    color: #17a2b8;
+}
+
+a > i.icon-download:hover {
+    color: #076675;
 }

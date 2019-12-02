@@ -12,24 +12,28 @@ use App\Database;
 
 class ProductsModel
 {
-    public static function create() {
-        
+    public static function create()
+    {
     }
 
-    public static function read() {
-        
+    public static function read()
+    {
     }
-    
-    public static function readProducts($categoryId, $id = null) {
+
+    public static function readProducts($categoryId, $id = null)
+    {
         $where = '';
 
         if (!empty($id)) {
             $where = 'AND id = :id';
         }
 
-        $sql = sprintf("SELECT id,name,description,media_image,media_video FROM products WHERE product_category_id = :categoryid AND active = 1 %s", $where);
+        $sql = sprintf(
+            "SELECT id,name,description,media_image,media_video FROM products WHERE product_category_id = :categoryid AND active = 1 %s",
+            $where
+        );
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':categoryid', $categoryId);
@@ -45,16 +49,20 @@ class ProductsModel
         return $result;
     }
 
-    public static function readCategories($companyId, $id = null) {
+    public static function readCategories($companyId, $id = null)
+    {
         $where = '';
 
         if (!empty($id)) {
             $where = 'AND id = :id';
         }
 
-        $sql = sprintf("SELECT id,name FROM products_categories WHERE company_id = :companyid AND active = 1 %s", $where);
+        $sql = sprintf(
+            "SELECT id,name FROM products_categories WHERE company_id = :companyid AND active = 1 %s",
+            $where
+        );
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':companyid', $companyId);
@@ -70,11 +78,11 @@ class ProductsModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }

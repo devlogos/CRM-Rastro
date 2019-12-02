@@ -5,8 +5,8 @@
                 <tr>
                     <th>
                         <div onchange="checkAllSellers()" class="custom-control custom-control-seller custom-checkbox mb-3 mt-2">
-                            <input type="checkbox" name="send_after_sale" class="custom-control-input" id="send_after_sale">
-                            <label class="custom-control-label" for="send_after_sale">&nbsp;</label>
+                            <input type="checkbox" class="custom-control-input" id="check_all">
+                            <label class="custom-control-label" for="check_all">&nbsp;</label>
                         </div>
                     </th>
                     <th>Vendedor</th>
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
         </table>
-    </div>    
+    </div>
 </div>
 
 <!-- MODAL NOTIFICATION -->
@@ -34,8 +34,8 @@
             <div class="modal-body">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <form class="form-notification" action="../seller/notification" onsubmit="return valSendNotification()" method="post">
-                            <input name="companyid" class="companyid" type="hidden"/>
+                        <form class="form-notification" action="../sellers/notification" onsubmit="return valSendNotification()" method="post">
+                            <input name="companyid" class="companyid" type="hidden" />
                             <div class="form-group token-group">
                             </div>
                             <div class="form-group">
@@ -75,12 +75,12 @@
             <div class="modal-body">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <form class="form-new-seller" action="../seller/create" onsubmit="return valNewSeller()" method="post">
-                            <input name="companyid" class="companyid" type="hidden"/>
+                        <form id="form-new-seller" class="form-new-seller" action="../sellers/create" onsubmit="return valNewSeller()" method="post">
+                            <input name="companyid" class="companyid" type="hidden" />
                             <div class="d-block">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item"><a class="nav-link tab-basicdata active" role="tab" data-toggle="tab" href="#tab-basicdata"><i class="icon-handbag icon-seller"></i></a></li>
-                                    <li class="nav-item"><a class="nav-link tab-settingsdata" role="tab" data-toggle="tab" href="#tab-settingsdata"><i class="icon-settings icon-seller"></i></a></li>                                    
+                                    <li class="nav-item"><a class="nav-link tab-settingsdata" role="tab" data-toggle="tab" href="#tab-settingsdata"><i class="icon-settings icon-seller"></i></a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active mt-2" role="tabpanel" id="tab-basicdata">
@@ -88,7 +88,7 @@
                                             <label for="name"><span class="mr-1 required">*</span>Nome</label>
                                             <seller field="name"></seller>
                                             <input type="text" name="name" autocomplete="off" class="form-control" id="name" maxlength="150" />
-                                        </div>                            
+                                        </div>
                                         <div class="form-group">
                                             <input type="file" name="url_image" id="url_image" />
                                         </div>
@@ -117,7 +117,7 @@
                                                 <label for="state_id" class="label-block"><span class="mr-1 required">*</span>Estado</label>
                                                 <select onchange="readListCities($(this).val(), '.cities-content', false, true);" name="state_id[]" class="form-control select2" id="state_id" multiple="multiple">
                                                     <option value="0">Selecione</option>
-                                                    <?php foreach ($states as $item): ?>
+                                                    <?php foreach ($states as $item) : ?>
                                                         <option value="<?php echo $item['id'] ?>"><?php echo $item['name'] ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
@@ -140,8 +140,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-row">                                                
-                                                <div class="col-6">                                                    
+                                            <div class="form-row">
+                                                <div class="col-6">
                                                     <div class="form-group">
                                                         <label for="bits_per_sample"><span class="mr-1 required">*</span>Bits p/ amostra</label>
                                                         <input type="number" value="32" name="bits_per_sample" autocomplete="off" class="form-control" id="bits_per_sample" />
@@ -151,7 +151,7 @@
                                                     <div class="form-group">
                                                         <label for="send_after_sale">Após venda</label>
                                                         <div class="custom-control custom-checkbox mb-3 mt-2">
-                                                            <input type="checkbox" name="send_after_sale" class="custom-control-input" id="send_after_sale">
+                                                            <input disabled type="checkbox" name="send_after_sale" class="custom-control-input" id="send_after_sale">
                                                             <label class="custom-control-label" for="send_after_sale">Sincronizar</label>
                                                         </div>
                                                     </div>

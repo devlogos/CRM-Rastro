@@ -12,19 +12,20 @@ use App\Database;
 
 class ShipmentsModel
 {
-    public static function create() {
-        
-    }
-    
-    public static function read() {       
-
+    public static function create()
+    {
     }
 
-    public static function readStatusId($shippingId) {       
+    public static function read()
+    {
+    }
 
-        $sql = 'SELECT B.id AS status_id FROM status_shipments A LEFT JOIN status B ON A.status_id = B.id LEFT JOIN shipments C ON A.shipping_id = C.id WHERE C.id = :id';
+    public static function readStatusId($shippingId)
+    {
+        $sql =
+            'SELECT B.id AS status_id FROM status_shipments A LEFT JOIN status B ON A.status_id = B.id LEFT JOIN shipments C ON A.shipping_id = C.id WHERE C.id = :id';
 
-        $database = new database;
+        $database = new database();
 
         $stmt = $database->prepare($sql);
         $stmt->bindParam(':id', $shippingId, \PDO::PARAM_INT);
@@ -36,11 +37,11 @@ class ShipmentsModel
         return $result;
     }
 
-    public static function update() {
-        
+    public static function update()
+    {
     }
 
-    public static function delete() {
-        
+    public static function delete()
+    {
     }
 }
