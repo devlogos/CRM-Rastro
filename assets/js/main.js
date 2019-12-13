@@ -243,6 +243,7 @@ function readListClients(clientId, content) {
         success: function(clientsContent) {
             if (clientsContent !== null) {
                 var option =
+                    '<label for="client_id" class="label-block"><span class="mr-1 required">*</span>Cliente</label>' +
                     '<select name="client_id" class="form-control select2" id="client_id">';
 
                 option += "<option value='0'>Selecione</option>";

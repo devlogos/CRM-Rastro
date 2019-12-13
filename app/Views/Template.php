@@ -22,7 +22,7 @@ $urlImage =
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rastro</title>
-    <link rel="stylesheet" href="<?php echo ASSETS_PATH; ?>/bootstrap/css/bootstrap.min.css?build=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo ASSETS_PATH; ?>/bootstrap-4.3.1/css/bootstrap.min.css?build=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo ASSETS_PATH; ?>/fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="<?php echo ASSETS_PATH; ?>/fonts/material-icons.min.css">
     <link rel="stylesheet" href="<?php echo ASSETS_PATH; ?>/css/navbar.css?build=<?php echo time(); ?>">
@@ -208,19 +208,20 @@ $urlImage =
         } ?>
     </section>
     <script src="<?php echo ASSETS_PATH; ?>/js/jquery-3.3.1.js"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.form.js"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.ajax.js?build=<?php echo time(); ?>"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/datatable/js/jquery.dataTables.min.js"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/jquery-ui.min.js?build=<?php echo time(); ?>"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.toast.js?build=<?php echo time(); ?>"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/datepicker.min.js?build=<?php echo time(); ?>"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/dropify/js/dropify.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/select2.min.js?build=<?php echo time(); ?>"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/popper.min.js"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/bootstrap-4.3.1/js/bootstrap.min.js"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.form.js?build=<?php echo time(); ?>"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.ajax.js?build=<?php echo time(); ?>"></script>    
+    <script src="<?php echo ASSETS_PATH; ?>/js/jquery-ui.min.js"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/jquery.toast.js"></script>    
+    <script src="<?php echo ASSETS_PATH; ?>/js/datepicker.min.js"></script>    
+    <script src="<?php echo ASSETS_PATH; ?>/js/lightbox.min.js"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/select2.min.js"></script>
     <script src="<?php echo ASSETS_PATH; ?>/js/main.js?build=<?php echo time(); ?>"></script>
-    <script src="<?php echo ASSETS_PATH; ?>/js/moment.js?build=<?php echo time(); ?>"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/js/moment.js"></script>
     <script src="<?php echo ASSETS_PATH; ?>/js/permissions.js?build=<?php echo time(); ?>"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="<?php echo ASSETS_PATH; ?>/dropify/js/dropify.min.js"></script>
     <?php if (getURL() == 'sales/list' || getURL() == 'sales/funnel') : ?>
         <script src="<?php echo ASSETS_PATH; ?>/js/sales-data.js?build=<?php echo time(); ?>"></script>
         <script src="<?php echo ASSETS_PATH; ?>/js/sales-list-funnel.js?build=<?php echo time(); ?>"></script>
@@ -232,7 +233,7 @@ $urlImage =
     <?php if (getURL() == 'sellers/list') : ?>
         <script src="<?php echo ASSETS_PATH; ?>/js/sellers-data.js?build=<?php echo time(); ?>"></script>
         <script src="<?php echo ASSETS_PATH; ?>/js/sellers-list.js?build=<?php echo time(); ?>"></script>
-    <?php endif; ?>
+    <?php endif; ?>    
 
     <script>
         $('.select2').select2()

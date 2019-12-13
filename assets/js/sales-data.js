@@ -114,9 +114,46 @@ function attributesSale(element) {
                             element.innerHTML =
                                 '<audio id="audioSale" src="' +
                                 audioFilepath +
-                                '" preload="auto" controls><p>Seu nevegador não suporta o elemento audio.</p></audio><a href="' +
-                                audioFilepath +
-                                '" download="download"><i class="material-icons icon-download">cloud_download</i></a>';
+                                '" preload="auto" controls><p>Seu nevegador não suporta o elemento audio.</p></audio>' +
+                                '<div class="dropdown">' +
+                                '<button style="cursor: pointer;" class="btn btn-info" type="button" data-toggle="dropdown"><i class="icon-share" ></i></button>' +
+                                "<div>" +
+                                '<div class="dropdown-menu dropdown-menu-right" style="padding-left:10px;padding-right:10px;" role="menu">' +
+                                '<input type="text" id="input-share-' +
+                                result["id"] +
+                                '" autocomplete="off" class="form-control" maxlength="11"><button id="btn-share-' +
+                                result["id"] +
+                                '" style="position:absolute;top:9px;right:10px;border-top-left-radius:0px;border-bottom-left-radius:0px;" class="btn btn-info ml-2" type="button">ok</button>' +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                            //'<a href="' +
+                            //audioFilepath +
+                            //'" download="download"><i class="material-icons icon-download">cloud_download</i></a>';
+
+                            $("#btn-share-" + result["id"] + "").on(
+                                "click",
+                                function() {
+                                    var inputShare = $(
+                                        "#input-share-" + result["id"] + ""
+                                    );
+
+                                    if (inputShare.val() != "") {
+                                        window.location =
+                                            "https://api.whatsapp.com/send?phone=+55" +
+                                            inputShare.val() +
+                                            "&text=" +
+                                            audioFilepath +
+                                            "";
+                                    } else {
+                                        inputShare.focus();
+
+                                        return false;
+                                    }
+                                }
+                            );
+
+                            //btn-share-whatsapp
                         } else {
                             element.innerHTML =
                                 '<div role="alert" class="alert alert-warning"><span><strong>Atenção! </strong>Gravação não sincronizada.</span></div>';

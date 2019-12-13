@@ -215,7 +215,7 @@ storage('finished_color', getValueArray($status, 'finished', 1, 'color'));
                     <div role="tabpanel" class="tab-pane" id="audio">
                         <div class="card mt-2">
                             <div class="card-body">
-                                <sale field="audio"></sale>
+                                <sale field="audio" style="display:flex;flex-direction: row;justify-content: space-between;align-items: center;"></sale>
                             </div>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ storage('finished_color', getValueArray($status, 'finished', 1, 'color'));
     <div class="modal-dialog modal-dialog-over" role="document">
         <div class="modal-content modal-content-over">
             <div class="modal-header">
-                <h4 class="modal-title">Novo Cliente (Agendamento)</h4>
+                <h4 class="modal-title">Novo Cliente</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -286,7 +286,7 @@ storage('finished_color', getValueArray($status, 'finished', 1, 'color'));
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Nova Venda</h4>
+                <h4 class="modal-title">Nova Venda (Agendamento)</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -296,7 +296,7 @@ storage('finished_color', getValueArray($status, 'finished', 1, 'color'));
                             <input name="send_audio_file" class="send_audio_file" type="hidden" value="0" />
                             <div class="form-group">
                                 <label for="creation_date"><span class="mr-1 required">*</span>Data de agendamento</label>
-                                <input type="text" readonly="true" name="creation_date" data-timepicker="true" data-language="pt-br" data-multiple-dates="3" data-multiple-dates-separator=", " data-position="bottom left" autocomplete="off" class="form-control date" maxlength="16" id="creation_date" />
+                                <input type="text" readonly="true" name="creation_date" data-timepicker="true" data-language="pt-br" data-position="bottom left" autocomplete="off" class="form-control date" maxlength="16" id="creation_date" />
                             </div>
                             <div class="form-group">
                                 <label for="code"><span class="mr-1 required">*</span>Código</label>
@@ -339,13 +339,10 @@ storage('finished_color', getValueArray($status, 'finished', 1, 'color'));
                                 <div class="form-group cities-content"></div>
                                 <div class="form-group districts-content"></div>
                             </fieldset>
-                            <fieldset>
-                                <legend>Cliente</legend>
-                                <div class="form-group d-flex flex-row-reverse justify-content-between">
-                                    <i class="icon-plus new-client"></i>
-                                    <div class="clients-content"></div>
-                                </div>
-                            </fieldset>
+                            <div class="form-group d-flex flex-row-reverse justify-content-between">
+                                <i class="icon-plus new-client"></i>
+                                <div class="clients-content"></div>
+                            </div>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox mb-3 mt-2">
                                     <input type="checkbox" name="client_is_holder" class="custom-control-input" id="client_is_holder">

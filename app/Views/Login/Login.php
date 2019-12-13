@@ -20,7 +20,7 @@ if (isset($_COOKIE['save_data_access']) && isset($_COOKIE['data_mail']) && isset
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Rastro</title>
-        <link rel="stylesheet" href="<?php echo ASSETS_PATH ?>/bootstrap/css/bootstrap.min.css?build=<?php echo time(); ?>">        
+        <link rel="stylesheet" href="<?php echo ASSETS_PATH ?>/bootstrap-4.3.1/css/bootstrap.min.css?build=<?php echo time(); ?>">        
         <link rel="stylesheet" href="<?php echo ASSETS_PATH ?>/css/navbar.css?build=<?php echo time(); ?>">
         <link rel="stylesheet" href="<?php echo ASSETS_PATH ?>/css/login.css?build=<?php echo time(); ?>">
         <link rel="stylesheet" href="<?php echo ASSETS_PATH ?>/css/main.css?build=<?php echo time(); ?>">
@@ -80,7 +80,7 @@ if (isset($_COOKIE['save_data_access']) && isset($_COOKIE['data_mail']) && isset
             </div>
         </div>
         <script src="<?php echo ASSETS_PATH ?>/js/jquery.min.js"></script>
-        <script src="<?php echo ASSETS_PATH ?>/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<?php echo ASSETS_PATH ?>/bootstrap-4.3.1/js/bootstrap.min.js"></script>
         <script src="<?php echo ASSETS_PATH ?>/js/jquery.form.js"></script>
         <script src="<?php echo ASSETS_PATH ?>/js/jquery.ajax.js?build=<?php echo time(); ?>"></script>
         <script>

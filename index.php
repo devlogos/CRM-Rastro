@@ -730,6 +730,7 @@ $app->post('/sales/create/{companyid}', function ($request, $response, $args) {
 
                 // condition applied to the app
                 if (empty($clientIdManager)) {
+
                     // define properties for clients
                     $ClientsController->setCreationDate($creationDate);
                     $ClientsController->setUpdateDate($updateDate);
@@ -859,15 +860,6 @@ $app->post('/sales/update/{companyid}/{id}', function ($request, $response, $arg
                 $SalesController->setReasonId($reasonId);
                 $SalesController->setShippingId($shippingId);
                 $SalesController->setSaleId($saleId);
-
-                // update client
-
-                $ClientsController->setUpdateDate($updateDate);
-                $ClientsController->setCompanyId($companyId);
-                $ClientsController->setName($clientName);
-                $ClientsController->setEmail($clientEmail);
-                $ClientsController->setTelephone($clientTelephone);
-                $SalesController->setClientId($clientId);
                 
                 $data = $SalesController->update();
             } else {

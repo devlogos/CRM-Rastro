@@ -38,7 +38,6 @@ body.body-funnel .container-fluid.main .col-md-3 {
 
 ::-webkit-scrollbar {
     width: 10px;
-    height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -64,11 +63,11 @@ table.dataTable thead td {
     padding: 10px 9.2px !important;
 }
 
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
     background-color: #ba4d4d !important;
 }
 
-.custom-control-input:checked~.custom-control-label::before {
+.custom-control-input:checked ~ .custom-control-label::before {
     color: #fff;
     background-color: #ba4d4d !important;
 }
